@@ -1,0 +1,22 @@
+---
+- hosts: "localhost"
+  connection: "local"
+  tasks:
+    - name: "Create ansible account"
+      ansible.builtin.user:
+        name: "ansible"
+        shell: /bin/bash
+        uid: 8008
+        group: admin
+        password_lock: true
+        system: true
+    - name: Set authorized keys taken from url
+      ansible.posix.authorized_key:
+        user: ansible
+        state: present       
+        key: https://relics.tradiuz.org/ssh/ansible.pub
+    - name: Allow ansible to do all the things.
+      community.general.sudoers:
+        name: ansible
+        user: ansible
+        commands: ALL
