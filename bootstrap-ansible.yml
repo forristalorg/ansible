@@ -7,7 +7,6 @@
         name: "ansible"
         shell: /bin/bash
         uid: 8008
-        group: admin
         password_lock: true
         system: true
     - name: Set authorized keys taken from url
