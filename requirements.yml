@@ -1,0 +1,3 @@
+- src: netbox.netbox
+- src: prometheus.prometheus
+- src: geerlingguy.docker
