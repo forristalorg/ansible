@@ -1,12 +1,12 @@
 ---
-- hosts: "localhost"
-  connection: "local"
+- hosts: localhost
+  connection: local
   tasks:
-    - name: "Make sure sudo is installed and updated."
+    - name: Make sure sudo is installed and updated.
       ansible.builtin.package:
         name: sudo
         state: latest
-    - name: "Create ansible account"
+    - name: Create ansible account
       ansible.builtin.user:
         name: "ansible"
         shell: /bin/bash
@@ -25,9 +25,9 @@
         commands: ALL
     - name: Ensure this is validated every day.
       ansible.builtin.cron:
-        name: "check ansible is configured"
+        name: Check that ansible is configured
         minute: "0"
         hour: "3"
-        job: "ansible-pull --url https://github.com/forristalorg/ansible.git bootstrap-ansible.yml > /dev/null"
+        job: ansible-pull --url https://github.com/forristalorg/ansible.git bootstrap-ansible.yml > /dev/null
         cron_file: ansible_bootstrap
         user: root
