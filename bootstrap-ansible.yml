@@ -2,6 +2,10 @@
 - hosts: "localhost"
   connection: "local"
   tasks:
+    - name: "Make sure sudo is installed and updated."
+      ansible.builtin.package:
+        name: sudo
+        state: latest
     - name: "Create ansible account"
       ansible.builtin.user:
         name: "ansible"
