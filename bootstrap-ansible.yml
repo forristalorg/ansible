@@ -1,11 +1,12 @@
 ---
-- hosts: localhost
+- name: Bootstrap Ansible
+  hosts: localhost
   connection: local
   tasks:
     - name: Make sure sudo is installed and updated.
       ansible.builtin.package:
         name: sudo
-        state: latest
+        state: present
     - name: Create ansible account
       ansible.builtin.user:
         name: "ansible"
@@ -16,7 +17,7 @@
     - name: Set authorized keys taken from url
       ansible.posix.authorized_key:
         user: ansible
-        state: present       
+        state: present
         key: https://relics.tradiuz.org/ssh/ansible.pub
     - name: Allow ansible to do all the things.
       community.general.sudoers:
