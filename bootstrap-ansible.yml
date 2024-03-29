@@ -30,5 +30,5 @@
         minute: "0"
         hour: "3"
         job: ansible-pull --url https://github.com/forristalorg/ansible.git bootstrap-ansible.yml > /dev/null
-        cron_file: ansible_bootstrap
+        name: ansible_bootstrap
         user: root
