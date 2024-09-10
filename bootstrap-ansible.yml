@@ -1,4 +1,10 @@
 ---
+- name: Harden OS
+  hosts: localhost
+  connection: local
+  roles:
+    - devsec.hardening.os_hardening
+    
 - name: Bootstrap Ansible
   hosts: localhost
   connection: local
