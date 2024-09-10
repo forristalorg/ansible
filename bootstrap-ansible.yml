@@ -1,4 +1,17 @@
 ---
+- name: Install Prereqs
+  hosts: localhost
+  connection: local
+  tasks: 
+    - name: Install collection requirements
+      community.general.ansible_galaxy_install:
+        type: collection
+        requirements_file: collections/requirements.yml
+    - name: Install role requirements
+      community.general.ansible_galaxy_install:
+        type: role
+        requirements_file: roles/requirements.yml
+    
 - name: Harden OS
   hosts: localhost
   connection: local
