@@ -12,11 +12,11 @@
         type: role
         requirements_file: roles/requirements.yml
     
-- name: Harden OS
-  hosts: localhost
-  connection: local
-  roles:
-    - devsec.hardening.os_hardening
+#- name: Harden OS
+#  hosts: localhost
+#  connection: local
+#  roles:
+#    - devsec.hardening.os_hardening
     
 - name: Bootstrap Ansible
   hosts: localhost
