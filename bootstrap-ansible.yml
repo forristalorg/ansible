@@ -12,7 +12,7 @@
         name: "ansible"
         shell: /bin/bash
         uid: 8008
-        password: '*'
+        password: "*"
         system: true
     - name: Set authorized keys taken from url
       ansible.posix.authorized_key:
@@ -25,9 +25,9 @@
         user: ansible
         commands: ALL
     - name: Download Root CA Cert
-      copy:
-        src: "https://relics.tradiuz.org/ssl/ca.crt"
-        dest: "/usr/local/share/ca-certificates/engyak-root.crt"
+      ansible.builtin.get_url:
+        url: "https://relics.tradiuz.org/ssl/ca.crt"
+        dest: "/usr/local/share/ca-certificates/forristal-root.crt"
     - name: Install/update ca-certificates package
       apt:
         name: ca-certificates
