@@ -12,7 +12,7 @@
         name: "ansible"
         shell: /bin/bash
         uid: 8008
-        password_lock: true
+        password: '*'
         system: true
     - name: Set authorized keys taken from url
       ansible.posix.authorized_key:
@@ -40,5 +40,4 @@
         minute: "0"
         hour: "3"
         job: ansible-pull --url https://github.com/forristalorg/ansible.git bootstrap-ansible.yml > /dev/null
-        cron_file: ansible_bootstrap
         user: root
