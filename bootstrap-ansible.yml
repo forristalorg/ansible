@@ -24,6 +24,16 @@
         name: ansible
         user: ansible
         commands: ALL
+    - name: Download Root CA Cert
+      copy:
+        src: "https://relics.tradiuz.org/ssl/ca.crt"
+        dest: "/usr/local/share/ca-certificates/engyak-root.crt"
+    - name: Install/update ca-certificates package
+      apt:
+        name: ca-certificates
+        state: latest
+    - name: Install Root CA Cert
+      ansible.builtin.shell: "/usr/sbin/update-ca-certificates"
     - name: Ensure this is validated every day.
       ansible.builtin.cron:
         name: Check that ansible is configured
