@@ -33,10 +33,8 @@
         url: "https://relics.tradiuz.org/ssl/ca.crt"
         dest: "/usr/local/share/ca-certificates/forristal-root.crt"
         mode: "644"
-      register: downloaded_cacert
-    - name: Install Root CA Cert
-      ansible.builtin.command: "/usr/sbin/update-ca-certificates"
-      when: downloaded_cacert.changed
+      notify:
+        - Rebuild CA Bundle
     - name: Ensure this is validated every day.
       ansible.builtin.cron:
         name: Check that ansible is configured
@@ -44,3 +42,6 @@
         hour: "3"
         job: ansible-pull --url https://github.com/forristalorg/ansible.git bootstrap-ansible.yml > /dev/null
         user: root
+  handlers:
+    - name: Rebuild CA Bundle
+      ansible.builtin.command: "/usr/sbin/update-ca-certificates"
