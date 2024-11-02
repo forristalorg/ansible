@@ -24,17 +24,19 @@
         name: ansible
         user: ansible
         commands: ALL
+    - name: Install/update ca-certificates package
+      ansible.builtin.package:
+        name: ca-certificates
+        state: latest # noqa package-latest
     - name: Download Root CA Cert
       ansible.builtin.get_url:
         url: "https://relics.tradiuz.org/ssl/ca.crt"
         dest: "/usr/local/share/ca-certificates/forristal-root.crt"
         mode: "644"
-    - name: Install/update ca-certificates package
-      ansible.builtin.apt:
-        name: ca-certificates
-        state: latest # noqa package-latest
+      register: downloaded_cacert
     - name: Install Root CA Cert
-      ansible.builtin.shell: "/usr/sbin/update-ca-certificates"
+      ansible.builtin.command: "/usr/sbin/update-ca-certificates"
+      when: downloaded_cacert.changed
     - name: Ensure this is validated every day.
       ansible.builtin.cron:
         name: Check that ansible is configured
