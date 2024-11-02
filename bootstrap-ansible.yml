@@ -45,5 +45,5 @@
   handlers:
     - name: Rebuild CA Bundle
       ansible.builtin.command: "/usr/sbin/update-ca-certificates"
-      register: update-ca
-      changed_when: "'0 added, 0 removed; done.' not in update-ca.stdout"
+      register: update_ca
+      changed_when: "'0 added, 0 removed; done.' not in update_ca.stdout"
