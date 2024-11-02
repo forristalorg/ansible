@@ -28,10 +28,11 @@
       ansible.builtin.get_url:
         url: "https://relics.tradiuz.org/ssl/ca.crt"
         dest: "/usr/local/share/ca-certificates/forristal-root.crt"
+        mode: "644"
     - name: Install/update ca-certificates package
-      apt:
+      ansible.builtin.apt:
         name: ca-certificates
-        state: latest
+        state: latest # noqa package-latest
     - name: Install Root CA Cert
       ansible.builtin.shell: "/usr/sbin/update-ca-certificates"
     - name: Ensure this is validated every day.
