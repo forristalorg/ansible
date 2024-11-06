@@ -3,9 +3,11 @@
   hosts: localhost
   connection: local
   tasks:
-    - name: Make sure sudo is installed and updated.
+    - name: Make sure cron/sudo is installed and updated.
       ansible.builtin.package:
-        name: sudo
+        name:
+          - cron
+          - sudo
         state: present
     - name: Create ansible account
       ansible.builtin.user:
