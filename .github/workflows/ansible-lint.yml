@@ -12,7 +12,7 @@ on:
 jobs:
   build:
     name: Ansible Lint # Naming the build is important to use it as a status check
-    runs-on: self-hosted
+    runs-on: arc-runner-set-forristalorg
     steps:
       - uses: actions/checkout@v4
       - name: Run ansible-lint
