@@ -1,0 +1,21 @@
+# .github/workflows/lint.yml
+name: ansible-lint
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    name: Lint
+    runs-on: arc-runner-set-forristalorg
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Run Super Lint
+        uses: super-linter/super-linter@v7.2.0
