@@ -16,6 +16,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Runner Prereqs
-        run: sudo apt update && sudo apt -y install wget
+        run: sudo apt-get -qq update && sudo apt-get -qq install wget
       - name: Run ansible-lint
         uses: ansible/ansible-lint@v24
