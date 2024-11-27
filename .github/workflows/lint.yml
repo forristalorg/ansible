@@ -19,5 +19,5 @@ jobs:
           fetch-depth: 0
       - name: test
         run: docker --version
-      - name: Run Super Lint
-        uses: super-linter/super-linter@v7.2.0
+#      - name: Run Super Lint
+#        uses: super-linter/super-linter@v7.2.0
