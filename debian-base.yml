@@ -1,0 +1,7 @@
+---
+- name: Bootstrap Ansible
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Ping
+      ansible.builtin.ping:

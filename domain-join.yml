@@ -1,0 +1,60 @@
+---
+- name: Bootstrap Ansible
+  hosts: localhost
+  connection: local
+  vars:
+    domain: home.forristal.org
+  tasks:
+    - name: Configure Resolvectl
+      block:
+        - name: Add Resolvers
+          community.general.ini_file:
+            path: /etc/systemd/resolved.conf
+            section: Resolve
+            option: DNS
+            value: 10.13.0.19 10.13.0.18
+        - name: Add Domains
+          community.general.ini_file:
+            path: /etc/systemd/resolved.conf
+            section: Resolve
+            option: Domains
+            value: "{{ domain }} ~."
+
+    - name: Install prereq packages
+      ansible.builtin.package:
+        name:
+          - realmd
+          - sssd
+          - sssd-tools
+          - libnss-sss
+          - libpam-sss
+          - adcli
+          - samba-common-bin
+          - oddjob
+          - oddjob-mkhomedir
+          - packagekit
+    - name: Ensure home dirs get autocreated
+      ansible.builtin.lineinfile:
+        path: /etc/pam.d/common-session
+        line: 'session optional        pam_mkhomedir.so skel=/etc/skel umask=077'
+        regexp: '^\s+session\s+optional\s+pam_mkhomedir\.so\s+skel=\/etc\/skel\s+umask=077.*\s*$'
+
+    - name: Check to see if we're already in the domain
+      ansible.builtin.command:
+        cmd: realm list
+      register: realm_status
+      changed_when: false
+
+    - name: Join domain
+      when: domain not in realm_status.stdout_lines
+      ansible.builtin.shell: /bin/bash -c "echo {{ bind_password }} | realm join --user=rf.biri ritaj.local"
+      register: join_output
+      no_log: true
+      changed_when: join_output.rc == 0
+
+    - name: Don't require fqdns for users
+      community.general.ini_file:
+        path: /etc/sssd/sssd.conf
+        section: "[domain/{{ domain }}]"
+        option: use_fully_qualified_names
+        value: 'False'
