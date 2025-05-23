@@ -44,11 +44,11 @@
         cmd: realm list
       register: realm_status
       changed_when: false
+
     - name: Join domain
       when: domain not in realm_status.stdout_lines
       ansible.builtin.shell: /bin/bash -c "echo {{ join_password }} | realm join --user={{ join_user }} {{ domain }}"
       register: join_output
-      no_log: true
       changed_when: join_output.rc == 0
 
     - name: Don't require fqdns for users
