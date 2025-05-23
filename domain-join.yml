@@ -1,9 +1,9 @@
 ---
-- name: Bootstrap Ansible
+- name: Domain Join
   hosts: localhost
   connection: local
-  vars:
-    domain: home.forristal.org
+  vars_files:
+    - /opt/ansible/domain_join.yml
   tasks:
     - name: Configure Resolvectl
       block:
@@ -44,10 +44,9 @@
         cmd: realm list
       register: realm_status
       changed_when: false
-
     - name: Join domain
       when: domain not in realm_status.stdout_lines
-      ansible.builtin.shell: /bin/bash -c "echo {{ bind_password }} | realm join --user=rf.biri ritaj.local"
+      ansible.builtin.shell: /bin/bash -c "echo {{ join_password }} | realm join --user={{ join_user }} {{ domain }}"
       register: join_output
       no_log: true
       changed_when: join_output.rc == 0
@@ -58,3 +57,8 @@
         section: "[domain/{{ domain }}]"
         option: use_fully_qualified_names
         value: 'False'
+
+    - name: Remove join secrets
+      ansible.builtin.file:
+        path: /opt/ansible/domain_jaoin.yml
+        state: absent

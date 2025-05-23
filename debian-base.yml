@@ -1,7 +1,6 @@
 ---
-- name: Bootstrap Ansible
-  hosts: localhost
-  connection: local
-  tasks:
-    - name: Ping
-      ansible.builtin.ping:
+- name: Include Ansible Bootstrapping
+  ansible.builtin.import_playbook: bootstrap-ansible.yml
+
+- name: Join the domain
+  ansible.builtin.import_playbook: domain-join.yml
