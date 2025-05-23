@@ -3,7 +3,7 @@
   hosts: localhost
   connection: local
   vars_files:
-    - /opt/ansible/domain_join.yml
+    - /root/domain_join.yml
   tasks:
     - name: Configure Resolvectl
       block:
@@ -60,5 +60,5 @@
 
     - name: Remove join secrets
       ansible.builtin.file:
-        path: /opt/ansible/domain_jaoin.yml
+        path: /root/domain_join.yml
         state: absent
