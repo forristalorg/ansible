@@ -37,8 +37,14 @@
         mode: "644"
       notify:
         - Rebuild CA Bundle
+    - name: Remove old job.
+      ansible.builtin.cron:
+        name: Check that ansible is configured
+        user: root
+        state: absent
     - name: Ensure this is validated every day.
       ansible.builtin.cron:
+        cron_file: ansible_bootstrap
         name: Check that ansible is configured
         minute: "0"
         hour: "3"
