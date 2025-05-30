@@ -1,13 +1,11 @@
 ---
 - name: Domain Join
-  hosts: localhost
-  connection: local
-  vars_files:
-    - /root/domain_join.yml
+  hosts: "{{ linux_vms | default('all') }}"
   tasks:
     - name: Configure Resolvectl
       block:
         - name: Add Resolvers
+          when: dns_servers is defined
           community.general.ini_file:
             path: /etc/systemd/resolved.conf
             section: Resolve
@@ -33,6 +31,7 @@
           - oddjob
           - oddjob-mkhomedir
           - packagekit
+
     - name: Ensure home dirs get autocreated
       ansible.builtin.lineinfile:
         path: /etc/pam.d/common-session
@@ -45,11 +44,18 @@
       register: realm_status
       changed_when: false
 
-    - name: Join domain
-      when: domain not in realm_status.stdout_lines
-      ansible.builtin.shell: /bin/bash -c "echo {{ join_password }} | realm join --user={{ join_user }} {{ join_ou is defined | | ansible.builtin.ternary('--computer-ou=' + join_ou,'') }} {{ domain }}"
-      register: join_output
-      changed_when: join_output.rc == 0
+    - name: Join domain and remove secrets
+      block:
+        - name: Join Domain
+          when: domain not in realm_status.stdout_lines
+          ansible.builtin.shell: /bin/bash -c "echo {{ join_password }} | realm join --user={{ join_user }} {{ join_ou is defined | | ansible.builtin.ternary('--computer-ou=' + join_ou,'') }} {{ domain }}"
+          register: join_output
+          changed_when: join_output.rc == 0
+      always:
+        - name: Remove join secrets
+          ansible.builtin.file:
+            path: /root/domain_join.yml
+            state: absent
 
     - name: Don't require fqdns for users
       community.general.ini_file:
@@ -57,8 +63,3 @@
         section: "[domain/{{ domain }}]"
         option: use_fully_qualified_names
         value: 'False'
-
-    - name: Remove join secrets
-      ansible.builtin.file:
-        path: /root/domain_join.yml
-        state: absent
