@@ -12,7 +12,7 @@
             path: /etc/systemd/resolved.conf
             section: Resolve
             option: DNS
-            value: 10.13.0.19 10.13.0.18
+            value: "{{ dns_servers | join(' ') }}"
         - name: Add Domains
           community.general.ini_file:
             path: /etc/systemd/resolved.conf
@@ -47,7 +47,7 @@
 
     - name: Join domain
       when: domain not in realm_status.stdout_lines
-      ansible.builtin.shell: /bin/bash -c "echo {{ join_password }} | realm join --user={{ join_user }} {{ domain }}"
+      ansible.builtin.shell: /bin/bash -c "echo {{ join_password }} | realm join --user={{ join_user }} {{ join_ou is defined | | ansible.builtin.ternary('--computer-ou=' + join_ou,'') }} {{ domain }}"
       register: join_output
       changed_when: join_output.rc == 0
 
