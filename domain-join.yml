@@ -11,14 +11,14 @@
             section: Resolve
             option: DNS
             value: "{{ dns_servers | join(' ') }}"
-            mode: u=rw,go=r
+            mode: 'u=rw,go=r'
         - name: Add Domains
           community.general.ini_file:
             path: /etc/systemd/resolved.conf
             section: Resolve
             option: Domains
             value: "{{ domain }} ~."
-            mode: u=rw,go=r
+            mode: 'u=rw,go=r'
 
     - name: Install prereq packages
       ansible.builtin.package:
@@ -72,4 +72,4 @@
         section: "[domain/{{ domain }}]"
         option: use_fully_qualified_names
         value: 'False'
-        mode: u=rw,go=
+        mode: 'u=rw,go='
