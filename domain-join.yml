@@ -11,12 +11,14 @@
             section: Resolve
             option: DNS
             value: "{{ dns_servers | join(' ') }}"
+            mode: u=rw,go=r
         - name: Add Domains
           community.general.ini_file:
             path: /etc/systemd/resolved.conf
             section: Resolve
             option: Domains
             value: "{{ domain }} ~."
+            mode: u=rw,go=r
 
     - name: Install prereq packages
       ansible.builtin.package:
@@ -35,8 +37,9 @@
     - name: Ensure home dirs get autocreated
       ansible.builtin.lineinfile:
         path: /etc/pam.d/common-session
-        line: 'session optional        pam_mkhomedir.so skel=/etc/skel umask=077'
-        regexp: '^\s+session\s+optional\s+pam_mkhomedir\.so\s+skel=\/etc\/skel\s+umask=077.*\s*$'
+        line: 'session optional  pam_mkhomedir.so skel=/etc/skel umask=077'
+        regexp: >-
+         ^\s+session\s+optional\s+pam_mkhomedir\.so\s+skel=\/etc\/skel\s+umask=077.*\s*$
 
     - name: Check to see if we're already in the domain
       ansible.builtin.command:
@@ -48,7 +51,13 @@
       block:
         - name: Join Domain
           when: domain not in realm_status.stdout_lines
-          ansible.builtin.shell: /bin/bash -c "echo {{ join_password }} | realm join --user={{ join_user }} {{ join_ou is defined | | ansible.builtin.ternary('--computer-ou=' + join_ou,'') }} {{ domain }}"
+          ansible.builtin.shell: >-
+            set -o pipefail &&
+            /bin/bash -c "echo {{ join_password }} |
+            realm join --user={{ join_user }}
+            {{ join_ou is defined |
+            ansible.builtin.ternary('--computer-ou=' + join_ou, '') }}
+            {{ domain }}"
           register: join_output
           changed_when: join_output.rc == 0
       always:
@@ -63,3 +72,4 @@
         section: "[domain/{{ domain }}]"
         option: use_fully_qualified_names
         value: 'False'
+        mode: u=rw,go=
