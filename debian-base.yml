@@ -1,6 +1,0 @@
----
-- name: Include Ansible Bootstrapping
-  ansible.builtin.import_playbook: bootstrap-ansible.yml
-
-- name: Join the domain
-  ansible.builtin.import_playbook: domain-join.yml
