@@ -12,7 +12,7 @@ on:
 jobs:
   build:
     name: Ansible Lint # Naming the build is important to use it as a status check
-    runs-on: arc-runner-set-forristalorg
+    runs-on: arc-runner-set-forristal
     steps:
       - uses: actions/checkout@v4
       - name: Runner Prereqs
