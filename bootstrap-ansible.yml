@@ -25,6 +25,7 @@
       community.general.sudoers:
         name: ansible
         user: ansible
+        runas: ALL
         commands: ALL
     - name: Install/update ca-certificates package
       ansible.builtin.package:
