@@ -77,7 +77,6 @@
               reg: "^PS1=.*PS1_CMD1.*"
               line: >-
                 PS1="[$?] ${Color_User}\\u${Yellow}@${Orange}\\h${Color_Off}:${LYellow}\\w${Color_Off}${PS1_CMD1}> "
-        
 
     - name: Set zsh prompt
       when: "'zsh' in ansible_facts.packages"
