@@ -41,11 +41,15 @@
               source /usr/local/share/bash/git-prompt.sh
         - name: Set prompt
           ansible.builtin.lineinfile:
-            path: 
-            search_string: 'PROMPT_COMMAND='
-            line: >-
-              PROMPT_COMMAND='PS1_CMD1=$(__git_ps1 " (%s)")'; PS1='[$?] \u@\h:\w ${PS1_CMD1} > '
+            path: /etc/bash.bashrc
+            regexp: "{{ item.reg }}"
+            line: "{{ item.line }}"              
             insertafter: EOF
+          loop_control:
+            label: "{{ item.label }}"
+          loop:
+            - { "label": "Prompt Command","reg" : "^\\s*PROMPT_COMMAND=.*", "line": "PROMPT_COMMAND='PS1_CMD1=$(__git_ps1 \" (%s)\")'" }
+            - { "label": "Prompt", "reg" : "^\\s*PS1=.*" , "line" : 'PS1="[$?] \\u@\\h:\\w ${PS1_CMD1} > "' }  
     - name: Set zsh prompt
       when: "'zsh' in ansible_facts.packages"
       block:
