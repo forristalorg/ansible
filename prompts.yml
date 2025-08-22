@@ -45,7 +45,7 @@
               source /usr/local/share/bash/colors.sh
               source /usr/local/share/bash/git-prompt.sh
               force_color_prompt=yes
-        - name: Set prompt
+        - name: Set prompt bash.bashrc
           ansible.builtin.lineinfile:
             path: /etc/bash.bashrc
             regexp: "{{ item.reg }}"
@@ -61,6 +61,23 @@
               reg: "^PS1=.*"
               line: >-
                 PS1="[$?] ${Color_User}\\u${Yellow}@${Orange}\\h${Color_Off}:${LYellow}\\w${Color_Off}${PS1_CMD1}> "
+        - name: Set prompt /etc/skel
+          ansible.builtin.lineinfile:
+            path: /etc/skel/.bashrc
+            regexp: "{{ item.reg }}"
+            line: "{{ item.line }}"
+            insertafter: EOF
+          loop_control:
+            label: "{{ item.label }}"
+          loop:
+            - label: "Prompt Command"
+              reg: "^PROMPT_COMMAND=.*"
+              line: "PROMPT_COMMAND='PS1_CMD1=$(__git_ps1 \" (%s)\")'"
+            - label: "Prompt"
+              reg: "^PS1=.*PS1_CMD1.*"
+              line: >-
+                PS1="[$?] ${Color_User}\\u${Yellow}@${Orange}\\h${Color_Off}:${LYellow}\\w${Color_Off}${PS1_CMD1}> "
+        
 
     - name: Set zsh prompt
       when: "'zsh' in ansible_facts.packages"
