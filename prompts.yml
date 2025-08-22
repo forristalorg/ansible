@@ -92,7 +92,7 @@
 
     - name: Configure aliases
       ansible.builtin.copy:
-        dest: /etc/profile/profile.d/aliases.sh
+        dest: /etc/profile.d/aliases.sh
         content: |
           alias ls='ls -a --color=auto'
           alias ll='ls -la'
