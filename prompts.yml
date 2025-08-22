@@ -43,13 +43,13 @@
           ansible.builtin.lineinfile:
             path: /etc/bash.bashrc
             regexp: "{{ item.reg }}"
-            line: "{{ item.line }}"              
+            line: "{{ item.line }}"
             insertafter: EOF
           loop_control:
             label: "{{ item.label }}"
           loop:
-            - { "label": "Prompt Command","reg" : "^\\s*PROMPT_COMMAND=.*", "line": "PROMPT_COMMAND='PS1_CMD1=$(__git_ps1 \" (%s)\")'" }
-            - { "label": "Prompt", "reg" : "^\\s*PS1=.*" , "line" : 'PS1="[$?] \\u@\\h:\\w ${PS1_CMD1} > "' }  
+            - { "label": "Prompt Command","reg": "^\\s*PROMPT_COMMAND=.*", "line": "PROMPT_COMMAND='PS1_CMD1=$(__git_ps1 \" (%s)\")'" }
+            - { "label": "Prompt", "reg": "^\\s*PS1=.*" , "line": 'PS1="[$?] \\u@\\h:\\w ${PS1_CMD1} > "' }
     - name: Set zsh prompt
       when: "'zsh' in ansible_facts.packages"
       block:
@@ -71,5 +71,11 @@
           ansible.builtin.lineinfile:
             path: /etc/zsh/zshrc
             regexp: '^export (PS1|PROMPT)='
-            line: 'export PROMPT="%0(?.%{%F{34}%}.%{%F{198}%})[%?]%{%f%} %(!.%{%F{196}%}.%{%F{34}%})%n%{%F{220}%}@%{%F{214}%}%m%{%f%}:%{%F{229}%}%~ $(gitprompt)$%{%f%}> "'
+            line: >-
+              {% raw %}
+              export
+              PROMPT='%0(?.%{%F{34}%}.%{%F{198}%})[%?]%{%f%}
+              %(!.%{%F{196}%}.%{%F{34}%})%n%{%F{220}%}@%{%F{214}%}%m%{%f%}:%{%F{229}%}%~
+              $(gitprompt)$%{%f%}> '
+              {% endraw %}
             state: present
