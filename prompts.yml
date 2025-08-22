@@ -71,5 +71,5 @@
           ansible.builtin.lineinfile:
             path: /etc/zsh/zshrc
             regexp: '^export (PS1|PROMPT)='
-            line: "export PROMPT='%0(?.%{%F{34}%}.%{%F{198}%})[%?]%{%f%} %(!.%{%F{196}%}.%{%F{34}%})%n%{%F{220}%}@%{%F{214}%}%m%{%f%}:%{%F{229}%}%~ $(gitprompt)$%{%f%}> '"
+            line: 'export PROMPT="%0(?.%{%F{34}%}.%{%F{198}%})[%?]%{%f%} %(!.%{%F{196}%}.%{%F{34}%})%n%{%F{220}%}@%{%F{214}%}%m%{%f%}:%{%F{229}%}%~ $(gitprompt)$%{%f%}> "'
             state: present
