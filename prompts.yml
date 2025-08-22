@@ -44,7 +44,7 @@
               GIT_PS1_SHOWDIRTYSTATE=true
               source /usr/local/share/bash/colors.sh
               source /usr/local/share/bash/git-prompt.sh
-
+              force_color_prompt=yes
         - name: Set prompt
           ansible.builtin.lineinfile:
             path: /etc/bash.bashrc
