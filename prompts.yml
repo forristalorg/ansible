@@ -75,6 +75,5 @@
               {% raw %}export
               PROMPT='%0(?.%{%F{34}%}.%{%F{198}%})[%?]%{%f%}
               %(!.%{%F{196}%}.%{%F{34}%})%n%{%F{220}%}@%{%F{214}%}%m%{%f%}:%{%F{229}%}%~
-              $(gitprompt)$%{%f%}> '
-              {% endraw %}
+              $(gitprompt)$%{%f%}> '{% endraw %}
             state: present
