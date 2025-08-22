@@ -32,7 +32,7 @@
             group: root
         - name: Configure git-prompt settings
           ansible.builtin.blockinfile:
-            path:
+            path: /etc/bash.bashrc
             marker: "# {mark} ANSIBLE MANAGED BLOCK - PROMPT"
             block: |
               GIT_PS1_SHOWUNTRACKEDFILES=true
