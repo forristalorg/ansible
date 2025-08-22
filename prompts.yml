@@ -63,14 +63,14 @@
         - name: Configure git-prompt to be imported
           ansible.builtin.lineinfile:
             path: /etc/zsh/zshrc
-            regexp: "^source.*git-prompt.zsh$"
+            regexp: '^\s*source.*git-prompt.zsh$'
             line: "source /usr/local/share/zsh/git-prompt.zsh"
             state: present
-            insertbefore: '^export (PS1|PROMPT)='
+            insertbefore: '^\s*export (PS1|PROMPT)='
         - name: Set prompt
           ansible.builtin.lineinfile:
             path: /etc/zsh/zshrc
-            regexp: '^export (PS1|PROMPT)='
+            regexp: '^\s*export (PS1|PROMPT)='
             line: >-
               {% raw %}export
               PROMPT='%0(?.%{%F{34}%}.%{%F{198}%})[%?]%{%f%}
