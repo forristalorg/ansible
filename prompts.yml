@@ -18,7 +18,7 @@
             group: root
         - name: Get git-prompt.sh
           ansible.builtin.get_url:
-            url: 
+            url: https://raw.githubusercontent.com/git/git/refs/heads/master/contrib/completion/git-prompt.sh
             dest: /usr/local/share/bash/git-prompt.sh
             mode: "u=rw,go=r"
             owner: root
