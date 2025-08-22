@@ -5,7 +5,6 @@
   tasks:
     - name: Gather the package facts
       ansible.builtin.package_facts:
-
     - name: Set bash prompt
       when: "'bash' in ansible_facts.packages"
       block:
@@ -48,8 +47,13 @@
           loop_control:
             label: "{{ item.label }}"
           loop:
-            - { "label": "Prompt Command","reg": "^\\s*PROMPT_COMMAND=.*", "line": "PROMPT_COMMAND='PS1_CMD1=$(__git_ps1 \" (%s)\")'" }
-            - { "label": "Prompt", "reg": "^\\s*PS1=.*" , "line": 'PS1="[$?] \\u@\\h:\\w ${PS1_CMD1} > "' }
+            - label: "Prompt Command"
+              reg: "^\\s*PROMPT_COMMAND=.*"
+              line: "PROMPT_COMMAND='PS1_CMD1=$(__git_ps1 \" (%s)\")'"
+            - label: "Prompt"
+              reg: "^\\s*PS1=.*"
+              line: >-
+                PS1="[$?] ${Red}\\u${Yellow}@${Orange}\\h${Color_Off}:${LYellow}\\w${Color_Off}${PS1_CMD1}> "
     - name: Set zsh prompt
       when: "'zsh' in ansible_facts.packages"
       block:
