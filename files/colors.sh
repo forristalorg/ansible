@@ -74,3 +74,12 @@ On_IWhite='\[\e[0;107m\]'   # White
 # Extra Colors
 Orange='\[\e[38;5;214m\]'
 LYellow='\[\e[38;5;229m\]'
+
+
+# User ID Magic
+Color_User=${Purple}
+if [[ `id -u` == 0 ]]; then
+  Color_User=${Red}
+else
+  Color_User=${Green}
+fi

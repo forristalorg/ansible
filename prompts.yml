@@ -60,7 +60,7 @@
             - label: "Prompt"
               reg: "^PS1=.*"
               line: >-
-                PS1="[$?] ${Red}\\u${Yellow}@${Orange}\\h${Color_Off}:${LYellow}\\w${Color_Off}${PS1_CMD1}> "
+                PS1="[$?] ${Color_User}\\u${Yellow}@${Orange}\\h${Color_Off}:${LYellow}\\w${Color_Off}${PS1_CMD1}> "
 
     - name: Set zsh prompt
       when: "'zsh' in ansible_facts.packages"
