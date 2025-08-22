@@ -1,0 +1,71 @@
+---
+- name: Set up prompts
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Gather the package facts
+      ansible.builtin.package_facts:
+
+    - name: Set bash prompt
+      when: "'bash' in ansible_facts.packages"
+      block:
+        - name: Make a /usr/local/share/bash
+          ansible.builtin.file:
+            path: /usr/local/share/bash
+            state: directory
+            mode: "u=rwx,go=rx"
+            owner: root
+            group: root
+        - name: Get git-prompt.sh
+          ansible.builtin.get_url:
+            url: 
+            dest: /usr/local/share/bash/git-prompt.sh
+            mode: "u=rw,go=r"
+            owner: root
+            group: root
+        - name: Create colors file
+          ansible.builtin.copy:
+            src: files/colors.sh
+            dest: /usr/local/share/bash/colors.sh
+            mode: "u=rw,go=r"
+            owner: root
+            group: root
+        - name: Configure git-prompt settings
+          ansible.builtin.blockinfile:
+            path:
+            marker: "# {mark} ANSIBLE MANAGED BLOCK - PROMPT"
+            block: |
+              GIT_PS1_SHOWUNTRACKEDFILES=true
+              GIT_PS1_SHOWDIRTYSTATE=true
+              source /usr/local/share/bash/colors.sh
+              source /usr/local/share/bash/git-prompt.sh
+        - name: Set prompt
+          ansible.builtin.lineinfile:
+            path: 
+            search_string: 'PROMPT_COMMAND='
+            line: >-
+              PROMPT_COMMAND='PS1_CMD1=$(__git_ps1 " (%s)")'; PS1='[$?] \u@\h:\w ${PS1_CMD1} > '
+            insertafter: EOF
+    - name: Set zsh prompt
+      when: "'zsh' in ansible_facts.packages"
+      block:
+        - name: Get git-prompt.zsh
+          ansible.builtin.get_url:
+            url: https://raw.githubusercontent.com/woefe/git-prompt.zsh/refs/heads/master/git-prompt.zsh
+            dest: /usr/local/share/zsh/git-prompt.zsh
+            mode: 'u=rw,g=r,o=r'
+            owner: root
+            group: root
+        - name: Configure git-prompt to be imported
+          ansible.builtin.lineinfile:
+            path: /etc/zsh/zshrc
+            regexp: "^source.*git-prompt.zsh$"
+            line: "source /usr/local/share/zsh/git-prompt.zsh"
+            state: present
+            insertbefore: '^export (PS1|PROMPT)='
+        - name: Set prompt
+          ansible.builtin.lineinfile:
+            path: /etc/zsh/zshrc
+            regexp: '^export (PS1|PROMPT)='
+            line: "export PROMPT='%0(?.%{%F{34}%}.%{%F{198}%})[%?]%{%f%} %(!.%{%F{196}%}.%{%F{34}%})%n%{%F{220}%}@%{%F{214}%}%m%{%f%}:%{%F{229}%}%~ $(gitprompt)$%{%f%}> '"
+            state: present
