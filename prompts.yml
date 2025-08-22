@@ -48,10 +48,10 @@
             label: "{{ item.label }}"
           loop:
             - label: "Prompt Command"
-              reg: "^\\s*PROMPT_COMMAND=.*"
+              reg: "^PROMPT_COMMAND=.*"
               line: "PROMPT_COMMAND='PS1_CMD1=$(__git_ps1 \" (%s)\")'"
             - label: "Prompt"
-              reg: "^\\s*PS1=.*"
+              reg: "^PS1=.*"
               line: >-
                 PS1="[$?] ${Red}\\u${Yellow}@${Orange}\\h${Color_Off}:${LYellow}\\w${Color_Off}${PS1_CMD1}> "
     - name: Set zsh prompt
@@ -67,14 +67,14 @@
         - name: Configure git-prompt to be imported
           ansible.builtin.lineinfile:
             path: /etc/zsh/zshrc
-            regexp: '^\s*source.*git-prompt.zsh$'
+            regexp: '^source .*git-prompt.zsh$'
             line: "source /usr/local/share/zsh/git-prompt.zsh"
             state: present
-            insertbefore: '^\s*export (PS1|PROMPT)='
+            insertbefore: '^export (PS1|PROMPT)='
         - name: Set prompt
           ansible.builtin.lineinfile:
             path: /etc/zsh/zshrc
-            regexp: '^\s*export (PS1|PROMPT)='
+            regexp: '^export (PS1|PROMPT)='
             line: >-
               {% raw %}export
               PROMPT='%0(?.%{%F{34}%}.%{%F{198}%})[%?]%{%f%}
