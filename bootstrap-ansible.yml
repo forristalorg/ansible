@@ -16,11 +16,16 @@
         uid: 8008
         password: "*"
         system: true
-    - name: Set authorized keys taken from url
+    - name: Set authorized keys taken from url - ansible
       ansible.posix.authorized_key:
         user: ansible
         state: present
         key: https://relics.tradiuz.org/ssh/ansible.pub
+    - name: Set authorized keys taken from url -root
+      ansible.posix.authorized_key:
+        user: root
+        state: present
+        key: https://relics.tradiuz.org/ssh/root.pub
     - name: Allow ansible to do all the things.
       community.general.sudoers:
         name: ansible
