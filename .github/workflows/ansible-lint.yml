@@ -18,4 +18,4 @@ jobs:
       - name: Runner Prereqs
         run: sudo apt-get -qq update  && sudo apt-get -qq upgrade && sudo apt-get -qq install wget 
       - name: Run ansible-lint
-        uses: ansible/ansible-lint@v24
+        uses: ansible/ansible-lint@v25
