@@ -81,6 +81,16 @@
     - name: Set zsh prompt
       when: "'zsh' in ansible_facts.packages"
       block:
+        - name: Fix home and end keys
+          ansible.builtin.blockinfile:
+            path: /etc/zsh/zshrc
+            marker: "#{mark} ANSIBLE MANAGED - fix_key_binds"
+            block: |
+              bindkey  "^[[1~"   beginning-of-line
+              bindkey  "^[[4~"   end-of-line
+            mode: 'u=rw,g=r,o=r'
+            owner: root
+            group: root
         - name: Get git-prompt.zsh
           ansible.builtin.get_url:
             url: https://raw.githubusercontent.com/woefe/git-prompt.zsh/refs/heads/master/git-prompt.zsh
@@ -96,6 +106,9 @@
             line: "source /usr/local/share/zsh/git-prompt.zsh"
             state: present
             insertbefore: '^export (PS1|PROMPT)='
+            mode: 'u=rw,g=r,o=r'
+            owner: root
+            group: root
 
         - name: Set prompt
           ansible.builtin.lineinfile:
@@ -105,6 +118,9 @@
               {% raw %}export PROMPT='%0(?.%{%F{34}%}.%{%F{198}%})[%?]%{%f%} %(!.%{%F{196}%}.%{%F{34}%})%n%{%F{220}%}@%{%F{214}%}%m%{%f%}:%{%F{229}%}%~
               $(gitprompt)$%{%f%}> '{% endraw %}
             state: present
+            mode: 'u=rw,g=r,o=r'
+            owner: root
+            group: root
 
     - name: Configure aliases
       ansible.builtin.copy:
