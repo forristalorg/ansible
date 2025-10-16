@@ -7,9 +7,15 @@
       ansible.builtin.package:
         name: 
           - "{{ (ansible_facts['distribution'] == 'Debian') | ternary('cron','cronie') }}"
+          - openssh-server
           - ca-certificates
           - sudo
         state: latest # noqa package-latest
+    - name: Make sure sshd is running
+      ansible.builtin.service:
+        name: "{{ (ansible_facts['distribution'] == 'Debian') | ternary('ssh','sshd') }}"
+        enabled: true
+        state: started
     - name: Create ansible account
       ansible.builtin.user:
         name: "ansible"
