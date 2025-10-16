@@ -3,13 +3,17 @@
   hosts: localhost
   connection: local
   tasks:
-    - name: Make sure cron/sudo is installed and updated.
+    - name: Make sure cron is installed and updated.
       when:  (ansible_distribution | lower) != 'alpine'
       ansible.builtin.package:
-        name:
-          - cron
-          - sudo
+        name: cron
         state: present
+    - name: Install/update sudo/ca-certificates package
+      ansible.builtin.package:
+        name: 
+          - ca-certificates
+          - sudo
+        state: latest # noqa package-latest
     - name: Create ansible account
       ansible.builtin.user:
         name: "ansible"
@@ -33,10 +37,6 @@
         user: ansible
         runas: ALL
         commands: ALL
-    - name: Install/update ca-certificates package
-      ansible.builtin.package:
-        name: ca-certificates
-        state: latest # noqa package-latest
     - name: Download Root CA Cert
       ansible.builtin.get_url:
         url: "https://relics.tradiuz.org/ssl/ca.crt"
