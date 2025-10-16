@@ -4,7 +4,7 @@
   connection: local
   tasks:
     - name: Make sure cron/sudo is installed and updated.
-      when:  (ansible_distribution | lower) != alpine
+      when:  (ansible_distribution | lower) != 'alpine'
       ansible.builtin.package:
         name:
           - cron
