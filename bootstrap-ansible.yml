@@ -3,14 +3,10 @@
   hosts: localhost
   connection: local
   tasks:
-    - name: Make sure cron is installed and updated.
-      when:  (ansible_distribution | lower) != 'alpine'
-      ansible.builtin.package:
-        name: cron
-        state: present
-    - name: Install/update sudo/ca-certificates package
+    - name: Install/update cronie/sudo/ca-certificates package
       ansible.builtin.package:
         name: 
+          - cronie
           - ca-certificates
           - sudo
         state: latest # noqa package-latest
