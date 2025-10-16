@@ -6,7 +6,7 @@
     - name: Install/update cronie/sudo/ca-certificates package
       ansible.builtin.package:
         name: 
-          - "{{ ansible_facts['distribution'] == 'Debian' | ternary('cron','cronie') }}"
+          - "{{ (ansible_facts['distribution'] == 'Debian') | ternary('cron','cronie') }}"
           - ca-certificates
           - sudo
         state: latest # noqa package-latest
