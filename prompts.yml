@@ -4,7 +4,11 @@
   hosts: localhost
 
   connection: local
-
+  vars:
+    global_bashrc:
+      alpine: /etc/bash/bashrc
+      debian: /etc/bash.bashrc
+      redhat: /etc/bashrc
   tasks:
     - name: Gather the package facts
       ansible.builtin.package_facts:
@@ -37,7 +41,7 @@
 
         - name: Configure git-prompt settings
           ansible.builtin.blockinfile:
-            path: /etc/bash.bashrc
+            path: "{{ global_bashrc[(ansible_facts['os_family'] | lower)] }}"
             marker: "# {mark} ANSIBLE MANAGED BLOCK - PROMPT"
             block: |
               GIT_PS1_SHOWUNTRACKEDFILES=true
@@ -47,7 +51,7 @@
               force_color_prompt=yes
         - name: Set prompt bash.bashrc
           ansible.builtin.lineinfile:
-            path: /etc/bash.bashrc
+            path: "{{ global_bashrc[(ansible_facts['os_family'] | lower)] }}"
             regexp: "{{ item.reg }}"
             line: "{{ item.line }}"
             insertafter: EOF
@@ -62,6 +66,7 @@
               line: >-
                 PS1="[$?] ${Color_User}\\u${Yellow}@${Orange}\\h${Color_Off}:${LYellow}\\w${Color_Off}${PS1_CMD1}> "
         - name: Set prompt /etc/skel
+          when: ansible_facts['os_family'] in ["Debian","RedHat"]
           ansible.builtin.lineinfile:
             path: /etc/skel/.bashrc
             regexp: "{{ item.reg }}"
