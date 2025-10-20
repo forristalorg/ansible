@@ -87,6 +87,11 @@
             path: /root/.bashrc
             line: "source {{ global_bashrc[(ansible_facts['os_family'] | lower)] }}"
             insertafter: EOF
+        - name: Set root shell to bash
+          ansible.builtin.user:
+            name: root
+            shell: /bin/bash
+
     - name: Set zsh prompt
       when: "'zsh' in ansible_facts.packages"
       block:
