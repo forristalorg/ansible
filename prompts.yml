@@ -86,6 +86,8 @@
           ansible.builtin.lineinfile:
             path: /root/.bashrc
             line: "source {{ global_bashrc[(ansible_facts['os_family'] | lower)] }}"
+            create: true
+            mode: 'u=rw,go='
             insertafter: EOF
         - name: Set root shell to bash
           ansible.builtin.user:
