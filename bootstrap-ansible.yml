@@ -13,7 +13,7 @@
         state: latest # noqa package-latest
     - name: Make sure sshd is running
       ansible.builtin.service:
-        name: "{{ (ansible_facts['distribution'] == 'Debian') | ternary('ssh','sshd') }}"
+        name: "{{ (ansible_facts['os_family'] == 'Debian') | ternary('ssh','sshd') }}"
         enabled: true
         state: started
     - name: Create ansible account
