@@ -9,12 +9,26 @@
       alpine: /etc/bash/bashrc
       debian: /etc/bash.bashrc
       redhat: /etc/bashrc
+    global_bashcomp:
+      alpine: /etc/bash/bash_completion.sh
+      debian: /etc/bash_completion
+      redhat: /etc/bash_completion
   tasks:
     - name: Gather the package facts
       ansible.builtin.package_facts:
     - name: Set bash prompt
       when: "'bash' in ansible_facts.packages"
       block:
+        - name: Set bash as default
+          when: "'zsh' not in ansible_facts.packages"
+          ansible.builtin.user:
+            name: root
+            shell: /bin/bash
+        - name: Ensure bash completion is available
+          ansible.builtin.package:
+            name: bash-completion
+            state: present
+            
         - name: Make a /usr/local/share/bash
           ansible.builtin.file:
             path: /usr/local/share/bash
@@ -49,7 +63,7 @@
               source /usr/local/share/bash/colors.sh
               source /usr/local/share/bash/git-prompt.sh
               force_color_prompt=yes
-        - name: Set prompt bash.bashrc
+        - name: Set bash.bashrc
           ansible.builtin.lineinfile:
             path: "{{ global_bashrc[(ansible_facts['os_family'] | lower)] }}"
             regexp: "{{ item.reg }}"
@@ -65,6 +79,8 @@
               reg: "^PS1=.*"
               line: >-
                 PS1="[$?] ${Color_User}\\u${Yellow}@${Orange}\\h${Color_Off}:${LYellow}\\w${Color_Off}${PS1_CMD1}> "
+            - label: "Completion"
+              reg: "source
         - name: Set prompt /etc/skel
           when: ansible_facts['os_family'] in ["Debian","RedHat"]
           ansible.builtin.lineinfile:
