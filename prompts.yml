@@ -124,6 +124,13 @@
             mode: 'u=rw,g=r,o=r'
             owner: root
             group: root
+        - name: Create zsh git prompt dir
+          ansible.builtin.file:
+            path: /usr/local/share/zsh
+            mode: 'u=rwx,go=rx'
+            state: directory
+            owner: root
+            group: root
         - name: Get git-prompt.zsh
           ansible.builtin.get_url:
             url: https://raw.githubusercontent.com/woefe/git-prompt.zsh/refs/heads/master/git-prompt.zsh
