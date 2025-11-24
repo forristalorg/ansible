@@ -98,7 +98,7 @@
             - label: "Prompt"
               reg: "^PS1=.*PS1_CMD1.*"
               line: >-
-                PS1="[$?] ${Color_User}\\u${Yellow}@${Orange}\\h${Color_Off}:${LYellow}\\w${Color_Off}${PS1_CMD1}> "
+                PS1="\\n[$?] ${Color_User}\\u${Yellow}@${Orange}\\h${Color_Off}:${LYellow}\\w${Color_Off}${PS1_CMD1}> "
         - name: Set add include to root .bashrc
           ansible.builtin.lineinfile:
             path: /root/.bashrc
@@ -106,14 +106,14 @@
             create: true
             mode: 'u=rw,go='
             insertafter: EOF
-        - name: Set root shell to bash
-          ansible.builtin.user:
-            name: root
-            shell: /bin/bash
 
     - name: Set zsh prompt
       when: "'zsh' in ansible_facts.packages"
       block:
+        - name: Set zsh as default
+          ansible.builtin.user:
+            name: root
+            shell: /bin/zsh
         - name: Fix home and end keys
           ansible.builtin.blockinfile:
             path: /etc/zsh/zshrc
@@ -148,7 +148,7 @@
             path: /etc/zsh/zshrc
             regexp: '^export (PS1|PROMPT)='
             line: >-
-              {% raw %}export PROMPT='%0(?.%{%F{34}%}.%{%F{198}%})[%?]%{%f%} %(!.%{%F{196}%}.%{%F{34}%})%n%{%F{220}%}@%{%F{214}%}%m%{%f%}:%{%F{229}%}%~
+              {% raw %}export PROMPT='\n%0(?.%{%F{34}%}.%{%F{198}%})[%?]%{%f%} %(!.%{%F{196}%}.%{%F{34}%})%n%{%F{220}%}@%{%F{214}%}%m%{%f%}:%{%F{229}%}%~
               $(gitprompt)$%{%f%}> '{% endraw %}
             state: present
             mode: 'u=rw,g=r,o=r'
