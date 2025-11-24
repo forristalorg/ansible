@@ -80,7 +80,8 @@
               line: >-
                 PS1="[$?] ${Color_User}\\u${Yellow}@${Orange}\\h${Color_Off}:${LYellow}\\w${Color_Off}${PS1_CMD1}> "
             - label: "Completion"
-              reg: "source
+              reg: "^(\.|source) {{ global_bashcomp[(ansible_facts['os_family'] | lower)] }}$"
+              line: "source {{ global_bashcomp[(ansible_facts['os_family'] | lower)] }}"
         - name: Set prompt /etc/skel
           when: ansible_facts['os_family'] in ["Debian","RedHat"]
           ansible.builtin.lineinfile:
