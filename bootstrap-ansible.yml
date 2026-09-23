@@ -39,13 +39,22 @@
         user: ansible
         runas: ALL
         commands: ALL
-    - name: Download Root CA Cert
+    - name: Download Root CA Cert (RedHat)
+      when: ansible_os_family == "RedHat"
+      ansible.builtin.get_url:
+        url: "https://relics.tradiuz.org/ssl/ca.crt"
+        dest: "/etc/pki/ca-trusted/source/anchors/forristal-root.crt"
+        mode: "644"
+      notify:
+        - update-ca-trust
+    - name: Download Root CA Cert (Debian)
+      when: ansible_os_family == "Debian"
       ansible.builtin.get_url:
         url: "https://relics.tradiuz.org/ssl/ca.crt"
         dest: "/usr/local/share/ca-certificates/forristal-root.crt"
         mode: "644"
       notify:
-        - Rebuild CA Bundle
+        - update-ca-certificates
     - name: Remove old job.
       ansible.builtin.cron:
         name: Check that ansible is configured
@@ -60,7 +69,9 @@
         job: ansible-pull --url https://github.com/forristalorg/ansible.git bootstrap-ansible.yml > /dev/null
         user: root
   handlers:
-    - name: Rebuild CA Bundle
+    - name: update-ca-trust
+      ansible.builtin.command: "/usr/bin/update-ca-trust"
+    - name: update-ca-certificates
       ansible.builtin.command: "/usr/sbin/update-ca-certificates"
       register: update_ca
       changed_when: "'0 added, 0 removed; done.' not in update_ca.stdout"
